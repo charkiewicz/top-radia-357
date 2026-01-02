@@ -32,6 +32,30 @@ VIEWS_CACHE_FILE = OUTPUT_DIR / "songs_with_views.json"
 RELEASE_YEARS_FILE = BASE_DIR / "release_years.csv"
 
 
+def load_cache(cache_file: Path) -> list:
+    """Load data from a JSON cache file."""
+    if not cache_file.exists():
+        return []
+    
+    try:
+        with open(cache_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Warning: Could not load cache from {cache_file}: {e}")
+        return []
+
+
+def save_cache(data: list, cache_file: Path):
+    """Save data to a JSON cache file."""
+    try:
+        # Ensure parent directory exists
+        cache_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(cache_file, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Warning: Could not save cache to {cache_file}: {e}")
+
+
 def load_release_years() -> dict[int, int]:
     """
     Load original release years from CSV file.
